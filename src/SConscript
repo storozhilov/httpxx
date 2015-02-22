@@ -1,0 +1,29 @@
+import os
+
+# Environment section
+env = Environment(
+CCFLAGS = ['-g', '-Wall'],
+CPPPATH = '../include'#,
+#CPPPATH = ['../include', '..'],
+#LIBPATH = '../lib',
+#LIBS = ['isl', 'boost_thread-mt', 'protobuf', 'uuid', 'crypto', 'pthread', 'rt']
+)
+env.Append(ENV = {'PATH' : os.environ['PATH']})
+
+# Build section
+
+sources = Glob('*.cpp')
+
+staticLibraryBuilder = env.StaticLibrary('../lib/httpxx', sources)
+sharedLibraryBuilder = env.SharedLibrary('../lib/httpxx', sources)
+Default([staticLibraryBuilder, sharedLibraryBuilder])
+
+# Install section
+prefix = GetOption('prefix')
+if prefix is None:
+	prefix = '/usr/local'
+
+libraryInstaller = env.Install(os.path.join(prefix, 'lib'), [staticLibraryBuilder, sharedLibraryBuilder])
+headersInstaller = env.Install(os.path.join(prefix, 'include/'), Glob('../include/*.h'))
+env.Alias('install', [libraryInstaller, headersInstaller])
+
