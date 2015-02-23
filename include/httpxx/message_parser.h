@@ -274,27 +274,6 @@ public:
 	std::pair<bool, size_t> parse(const void * parseBuffer, size_t parseBufferSize, std::ostream& os);
 	//! Resets parser
 	virtual void reset();
-protected:
-	//! Sets parser to the error state
-	//void setIsBad(char ch, const std::string& errMsg);
-	//! On first token parsed event handler
-	/*!
-	  \param token Parsed token value
-	*/
-	virtual void onFirstTokenParsed(const std::string& token)
-	{}
-	//! On second token parsed event handler
-	/*!
-	  \param token Parsed token value
-	*/
-	virtual void onSecondTokenParsed(const std::string& token)
-	{}
-	//! On third token parsed event handler
-	/*!
-	  \param token Parsed token value
-	*/
-	virtual void onThirdTokenParsed(const std::string& token)
-	{}
 private:
 	MessageParser();
 
@@ -306,7 +285,6 @@ private:
 	void parseHeaderValueLWS(char ch, bool isTrailer);
 
 	State _state;
-	//std::auto_ptr<AbstractError> _errorAutoPtr;
 	size_t _pos;
 	size_t _line;
 	size_t _col;
