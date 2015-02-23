@@ -7,29 +7,29 @@ namespace {
 
 const char * ErrorCodeMessages[] =
 	{
-		"Invalid character in first token", /* exception::InvalidFirstToken */
-		"First token is too long", /* exception::FirstTokenIsTooLong */
-		"Invalid character in second token", /* exception::InvalidSecondToken */
-		"Second token is too long", /* exception::SecondTokenIsTooLong */
-		"Invalid character in third token", /* exception::InvalidThirdToken */
-		"Third token is too long", /* exception::ThirdTokenIsTooLong */
-		"First line CR is followed by invalid character", /* exception::InvalidFirstLineLF */
-		"Too many headers", /* exception::TooManyHeaders */
-		"Empty header name", /* exception::EmptyHeaderName */
-		"Invalid header name", /* exception::InvalidHeaderName */
-		"Header name is too long", /* exception::HeaderNameIsTooLong */
-		"Header is missing ':' separator", /* exception::HeaderIsMissingColon */
-		"Invalid header value", /* exception::InvalidHeaderValue */
-		"Header value is too long", /* exception::HeaderValueIsTooLong */
-		"Header CR is followed by invalid character", /* exception::InvalidHeaderLF */
-		"Invalid content length", /* exception::InvalidContentLength */
-		"Empty chunk size", /* exception::EmptyChunkSize */
-		"Invalid chunk size", /* exception::InvalidChunkSize */
-		"Chunk size CR is followed by invalid character", /* exception::InvalidChunkSizeLF */
-		"Chunk data is followed by invalid character", /* exception::InvalidChunkDataCR */
-		"Chunk data CR is followed by invalid character", /* exception::InvalidChunkDataLF */
-		"Final CR is followed by invalid character", /* exception::InvalidFinalLF */
-		"Invalid parser state", /* exception::InvalidState - should never happens */
+		"Invalid character in first token", /* Exception::InvalidFirstToken */
+		"First token is too long", /* Exception::FirstTokenIsTooLong */
+		"Invalid character in second token", /* Exception::InvalidSecondToken */
+		"Second token is too long", /* Exception::SecondTokenIsTooLong */
+		"Invalid character in third token", /* Exception::InvalidThirdToken */
+		"Third token is too long", /* Exception::ThirdTokenIsTooLong */
+		"First line CR is followed by invalid character", /* Exception::InvalidFirstLineLF */
+		"Too many headers", /* Exception::TooManyHeaders */
+		"Empty header name", /* Exception::EmptyHeaderName */
+		"Invalid header name", /* Exception::InvalidHeaderName */
+		"Header name is too long", /* Exception::HeaderNameIsTooLong */
+		"Header is missing ':' separator", /* Exception::HeaderIsMissingColon */
+		"Invalid header value", /* Exception::InvalidHeaderValue */
+		"Header value is too long", /* Exception::HeaderValueIsTooLong */
+		"Header CR is followed by invalid character", /* Exception::InvalidHeaderLF */
+		"Invalid content length", /* Exception::InvalidContentLength */
+		"Empty chunk size", /* Exception::EmptyChunkSize */
+		"Invalid chunk size", /* Exception::InvalidChunkSize */
+		"Chunk size CR is followed by invalid character", /* Exception::InvalidChunkSizeLF */
+		"Chunk data is followed by invalid character", /* Exception::InvalidChunkDataCR */
+		"Chunk data CR is followed by invalid character", /* Exception::InvalidChunkDataLF */
+		"Final CR is followed by invalid character", /* Exception::InvalidFinalLF */
+		"Invalid parser state", /* Exception::InvalidState - should never happens */
 	};
 
 }
@@ -82,7 +82,7 @@ bool MessageParser::parse(char ch, bool * isBodyChar)
 			_firstToken += ch;
 			_state = ParsingFirstToken;
 		} else {
-			throw exception(ch, _pos, _line, _col, exception::InvalidFirstToken);
+			throw Exception(ch, _pos, _line, _col, Exception::InvalidFirstToken);
 		}
 		break;
 	case ParsingLeadingSP:
@@ -92,7 +92,7 @@ bool MessageParser::parse(char ch, bool * isBodyChar)
 			_firstToken += ch;
 			_state = ParsingFirstToken;
 		} else {
-			throw exception(ch, _pos, _line, _col, exception::InvalidFirstToken);
+			throw Exception(ch, _pos, _line, _col, Exception::InvalidFirstToken);
 		}
 		break;
 	case ParsingFirstToken:
@@ -100,12 +100,12 @@ bool MessageParser::parse(char ch, bool * isBodyChar)
 			_state = ParsingFirstTokenSP;
 		} else if (isChar(ch) && !isControl(ch)) {
 			if (_firstToken.length() >= _maxFirstTokenLength) {
-				throw exception(ch, _pos, _line, _col, exception::FirstTokenIsTooLong);
+				throw Exception(ch, _pos, _line, _col, Exception::FirstTokenIsTooLong);
 			} else {
 				_firstToken += ch;
 			}
 		} else {
-			throw exception(ch, _pos, _line, _col, exception::InvalidFirstToken);
+			throw Exception(ch, _pos, _line, _col, Exception::InvalidFirstToken);
 		}
 		break;
 	case ParsingFirstTokenSP:
@@ -116,7 +116,7 @@ bool MessageParser::parse(char ch, bool * isBodyChar)
 			_secondToken += ch;
 			_state = ParsingSecondToken;
 		} else {
-			throw exception(ch, _pos, _line, _col, exception::InvalidSecondToken);
+			throw Exception(ch, _pos, _line, _col, Exception::InvalidSecondToken);
 		}
 		break;
 	case ParsingSecondToken:
@@ -124,12 +124,12 @@ bool MessageParser::parse(char ch, bool * isBodyChar)
 			_state = ParsingSecondTokenSP;
 		} else if (isChar(ch) && !isControl(ch)) {
 			if (_secondToken.length() >= _maxSecondTokenLength) {
-				throw exception(ch, _pos, _line, _col, exception::SecondTokenIsTooLong);
+				throw Exception(ch, _pos, _line, _col, Exception::SecondTokenIsTooLong);
 			} else {
 				_secondToken += ch;
 			}
 		} else {
-			throw exception(ch, _pos, _line, _col, exception::InvalidSecondToken);
+			throw Exception(ch, _pos, _line, _col, Exception::InvalidSecondToken);
 		}
 		break;
 	case ParsingSecondTokenSP:
@@ -140,7 +140,7 @@ bool MessageParser::parse(char ch, bool * isBodyChar)
 			_thirdToken += ch;
 			_state = ParsingThirdToken;
 		} else {
-			throw exception(ch, _pos, _line, _col, exception::InvalidThirdToken);
+			throw Exception(ch, _pos, _line, _col, Exception::InvalidThirdToken);
 		}
 		break;
 	case ParsingThirdToken:
@@ -148,19 +148,19 @@ bool MessageParser::parse(char ch, bool * isBodyChar)
 			_state = ParsingFirstLineLF;
 		} else if (isChar(ch) && !isControl(ch)) {
 			if (_thirdToken.length() >= _maxThirdTokenLength) {
-				throw exception(ch, _pos, _line, _col, exception::ThirdTokenIsTooLong);
+				throw Exception(ch, _pos, _line, _col, Exception::ThirdTokenIsTooLong);
 			} else {
 				_thirdToken += ch;
 			} 
 		} else {
-			throw exception(ch, _pos, _line, _col, exception::InvalidThirdToken);
+			throw Exception(ch, _pos, _line, _col, Exception::InvalidThirdToken);
 		}
 		break;
 	case ParsingFirstLineLF:
 		if (isLineFeed(ch)) {
 			_state = ParsingHeader;
 		} else {
-			throw exception(ch, _pos, _line, _col, exception::InvalidFirstLineLF);
+			throw Exception(ch, _pos, _line, _col, Exception::InvalidFirstLineLF);
 		}
 		break;
 	case ParsingHeader:
@@ -187,7 +187,7 @@ bool MessageParser::parse(char ch, bool * isBodyChar)
 				try {
 					_contentLength = toUnsignedInt(_headers.value("Content-Length"));
 				} catch (std::exception& /* e */) {
-					throw exception(ch, _pos, _line, _col, exception::InvalidContentLength);
+					throw Exception(ch, _pos, _line, _col, Exception::InvalidContentLength);
 				}
 				if (_contentLength <= 0) {
 					_state = ParsingMessage;
@@ -198,7 +198,7 @@ bool MessageParser::parse(char ch, bool * isBodyChar)
 				_state = ParsingMessage;
 			}
 		} else {
-			throw exception(ch, _pos, _line, _col, exception::InvalidHeaderLF);
+			throw Exception(ch, _pos, _line, _col, Exception::InvalidHeaderLF);
 		}
 		break;
 	case ParsingIdentityBody:
@@ -212,15 +212,12 @@ bool MessageParser::parse(char ch, bool * isBodyChar)
 			_chunkSizeStr += ch;
 		} else {
 			if (_chunkSizeStr.empty()) {
-				throw exception(ch, _pos, _line, _col, exception::EmptyChunkSize);
+				throw Exception(ch, _pos, _line, _col, Exception::EmptyChunkSize);
 			} else {
 				try {
 					_chunkSize = toUnsignedInt(_chunkSizeStr, true);
-				} catch (std::exception& e) {
-					std::ostringstream msg;
-					msg << "Error casting chunk size '" << _chunkSizeStr <<
-						"' as unsigned integer hex value: " << e.what();
-					throw exception(ch, _pos, _line, _col, exception::InvalidChunkSize);
+				} catch (std::exception& /* e */) {
+					throw Exception(ch, _pos, _line, _col, Exception::InvalidChunkSize);
 				}
 				_chunkBytesParsed = 0;
 				_chunkSizeStr.clear();
@@ -242,7 +239,7 @@ bool MessageParser::parse(char ch, bool * isBodyChar)
 		if (isLineFeed(ch)) {
 			_state = (_chunkSize > 0) ? ParsingChunk : ParsingTrailerHeader;
 		} else {
-			throw exception(ch, _pos, _line, _col, exception::InvalidChunkSizeLF);
+			throw Exception(ch, _pos, _line, _col, Exception::InvalidChunkSizeLF);
 		}
 		break;
 	case ParsingChunk:
@@ -255,14 +252,14 @@ bool MessageParser::parse(char ch, bool * isBodyChar)
 		if (isCarriageReturn(ch)) {
 			_state = ParsingChunkLF;
 		} else {
-			throw exception(ch, _pos, _line, _col, exception::InvalidChunkDataCR);
+			throw Exception(ch, _pos, _line, _col, Exception::InvalidChunkDataCR);
 		}
 		break;
 	case ParsingChunkLF:
 		if (isLineFeed(ch)) {
 			_state = ParsingChunkSize;
 		} else {
-			throw exception(ch, _pos, _line, _col, exception::InvalidChunkDataLF);
+			throw Exception(ch, _pos, _line, _col, Exception::InvalidChunkDataLF);
 		}
 		break;
 	case ParsingTrailerHeader:
@@ -284,11 +281,11 @@ bool MessageParser::parse(char ch, bool * isBodyChar)
 		if (isLineFeed(ch)) {
 			_state = ParsingMessage;
 		} else {
-			throw exception(ch, _pos, _line, _col, exception::InvalidFinalLF);
+			throw Exception(ch, _pos, _line, _col, Exception::InvalidFinalLF);
 		}
 		break;
 	default:
-		throw exception(ch, _pos, _line, _col, exception::InvalidState);
+		throw Exception(ch, _pos, _line, _col, Exception::InvalidState);
 	}
 	// Updating current position data
 	++_pos;
@@ -377,7 +374,7 @@ void MessageParser::reset()
 void MessageParser::appendHeader(char ch)
 {
 	if (_headers.size() >= _maxHeadersAmount) {
-		throw exception(ch, _pos, _line, _col, exception::TooManyHeaders);
+		throw Exception(ch, _pos, _line, _col, Exception::TooManyHeaders);
 	}
 	trim(_headerFieldName);
 	trim(_headerFieldValue);
@@ -393,30 +390,30 @@ void MessageParser::parseHeader(char ch, bool isTrailer)
 	if (isCarriageReturn(ch)) {
 		_state = isTrailer ? ParsingFinalLF : ParsingEndOfHeader;
 	} else if (ch == ':') {
-		throw exception(ch, _pos, _line, _col, exception::EmptyHeaderName);
+		throw Exception(ch, _pos, _line, _col, Exception::EmptyHeaderName);
 	} else if (isToken(ch)) {
 		// Header field name is empty -> no length check
 		_headerFieldName += ch;
 		_state = isTrailer ? ParsingTrailerHeaderName : ParsingHeaderName;
 	} else {
-		throw exception(ch, _pos, _line, _col, exception::InvalidHeaderName);
+		throw Exception(ch, _pos, _line, _col, Exception::InvalidHeaderName);
 	}
 }
 
 void MessageParser::parseHeaderName(char ch, bool isTrailer)
 {
 	if (isCarriageReturn(ch)) {
-		throw exception(ch, _pos, _line, _col, exception::HeaderIsMissingColon);
+		throw Exception(ch, _pos, _line, _col, Exception::HeaderIsMissingColon);
 	} else if (ch == ':') {
 		_state = isTrailer ? ParsingTrailerHeaderValue : ParsingHeaderValue;
 	} else if (isToken(ch)) {
 		if (_headerFieldName.length() < maxHeaderNameLength()) {
 			_headerFieldName += ch;
 		} else {
-			throw exception(ch, _pos, _line, _col, exception::HeaderNameIsTooLong);
+			throw Exception(ch, _pos, _line, _col, Exception::HeaderNameIsTooLong);
 		}
 	} else {
-		throw exception(ch, _pos, _line, _col, exception::InvalidHeaderName);
+		throw Exception(ch, _pos, _line, _col, Exception::InvalidHeaderName);
 	}
 }
 
@@ -428,10 +425,10 @@ void MessageParser::parseHeaderValue(char ch, bool isTrailer)
 		if (_headerFieldValue.length() < maxHeaderValueLength()) {
 			_headerFieldValue += ch;
 		} else {
-			throw exception(ch, _pos, _line, _col, exception::HeaderValueIsTooLong);
+			throw Exception(ch, _pos, _line, _col, Exception::HeaderValueIsTooLong);
 		}
 	} else {
-		throw exception(ch, _pos, _line, _col, exception::InvalidHeaderValue);
+		throw Exception(ch, _pos, _line, _col, Exception::InvalidHeaderValue);
 	}
 }
 
@@ -440,7 +437,7 @@ void MessageParser::parseHeaderValueLF(char ch, bool isTrailer)
 	if (isLineFeed(ch)) {
 		_state = isTrailer ? ParsingTrailerHeaderValueLWS : ParsingHeaderValueLWS;
 	} else {
-		throw exception(ch, _pos, _line, _col, exception::InvalidHeaderLF);
+		throw Exception(ch, _pos, _line, _col, Exception::InvalidHeaderLF);
 	}
 }
 
@@ -450,13 +447,13 @@ void MessageParser::parseHeaderValueLWS(char ch, bool isTrailer)
 		appendHeader(ch);
 		_state = isTrailer ? ParsingFinalLF : ParsingEndOfHeader;
 	} else if (ch == ':') {
-		throw exception(ch, _pos, _line, _col, exception::EmptyHeaderName);
+		throw Exception(ch, _pos, _line, _col, Exception::EmptyHeaderName);
 	} else if (isSpaceOrTab(ch)) {
 		if (_headerFieldValue.length() < maxHeaderValueLength()) {
 			_headerFieldValue += ' ';
 			_state = isTrailer ? ParsingTrailerHeaderValue : ParsingHeaderValue;
 		} else {
-			throw exception(ch, _pos, _line, _col, exception::HeaderValueIsTooLong);
+			throw Exception(ch, _pos, _line, _col, Exception::HeaderValueIsTooLong);
 		}
 	} else if (isToken(ch)) {
 		appendHeader(ch);
@@ -464,15 +461,16 @@ void MessageParser::parseHeaderValueLWS(char ch, bool isTrailer)
 		_headerFieldName += ch;
 		_state = isTrailer ? ParsingTrailerHeaderName : ParsingHeaderName;
 	} else {
-		throw exception(ch, _pos, _line, _col, exception::InvalidHeaderName);
+		throw Exception(ch, _pos, _line, _col, Exception::InvalidHeaderName);
 	}
 }
 
 //------------------------------------------------------------------------------
-// MessageParser::exception
+// MessageParser::Exception
 //------------------------------------------------------------------------------
 
-MessageParser::exception::exception(char ch, int pos, int line, int col, Code code) :
+MessageParser::Exception::Exception(char ch, int pos, int line, int col, Code code) :
+	std::exception(),
 	_ch(ch),
 	_pos(pos),
 	_line(line),
@@ -481,12 +479,12 @@ MessageParser::exception::exception(char ch, int pos, int line, int col, Code co
 	_what()
 {}
 
-const char * MessageParser::exception::msg() const throw ()
+const char * MessageParser::Exception::msg() const throw ()
 {
 	return ErrorCodeMessages[_code];
 }
 
-const char * MessageParser::exception::what() const throw ()
+const char * MessageParser::Exception::what() const throw ()
 {
 	if (_what.empty()) {
 		std::ostringstream oss;

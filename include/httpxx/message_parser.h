@@ -64,7 +64,7 @@ public:
 		ParsingFinalLF,					//!< Parsing final LF of the message
 	};
 	//! HTTP-message parser exception class
-	class exception : public std::exception
+	class Exception : public std::exception
 	{
 	public:
 		//! HTTP-message parser error codes
@@ -101,8 +101,8 @@ public:
 		  \param col Column of the error in the HTTP-message (starts from 1)
 		  \param code Error code
 		*/
-		exception(char ch, int pos, int line, int col, Code code);
-		virtual ~exception() throw ()
+		Exception(char ch, int pos, int line, int col, Code code);
+		virtual ~Exception() throw ()
 		{}
 		//! Returns a character, which caused an error
 		inline char ch() const
