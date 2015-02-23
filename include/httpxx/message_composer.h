@@ -15,7 +15,7 @@ class MessageComposer
 {
 public:
 	//! HTTP-packet: { buffer ptr => size }
-	typedef std::pair<const char *, size_t> Packet;
+	typedef std::pair<const void *, size_t> Packet;
 
 	MessageComposer(const std::string& firstToken, const std::string& secondToken,
 			const std::string& thirdToken);
@@ -39,7 +39,7 @@ public:
 	 * \param payloadLen Length of the payload data in HTTP-message
 	 * \return Length of the envelope
 	 */
-	size_t composeEnvelope(char * buffer, size_t bufLen, const Headers& headers, size_t payloadLen = 0U);
+	size_t composeEnvelope(void * buffer, size_t bufLen, const Headers& headers, size_t payloadLen = 0U);
 	//! Returns size of identity-encoded transmission envelope (TODO)
 	/*!
 	 * TODO
@@ -53,7 +53,7 @@ public:
 	 * \param payloadLen Length of the data in buffer to send (should start from 'envelopePartLen' offset)
 	 * \return Pointer to HTTP-packet and it's length (envelope + data)
 	 */
-	Packet prependEnvelope(char * buffer, size_t envelopePartLen, const Headers& headers,
+	Packet prependEnvelope(void * buffer, size_t envelopePartLen, const Headers& headers,
 			size_t payloadLen = 0U);
 	//! Composes first chunk envelope into output stream for chunked-encoded transmission
 	/*!
@@ -70,7 +70,7 @@ public:
 	 * \param payloadLen Length of the payload data in HTTP-chunk (should be positive)
 	 * \return Length of the first HTTP-chunk envelope
 	 */
-	size_t composeFirstChunkEnvelope(char * buffer, size_t bufLen, const Headers& headers, size_t payloadLen);
+	size_t composeFirstChunkEnvelope(void * buffer, size_t bufLen, const Headers& headers, size_t payloadLen);
 	//! Returns size of first HTTP-chunk envelope (TODO)
 	/*!
 	 * TODO
@@ -84,7 +84,7 @@ public:
 	 * \param payloadLen Length of the data in buffer to send (should start from 'envelopePartLen' offset)
 	 * \return Pointer to the first HTTP-chunk and it's length (envelope + data)
 	 */
-	Packet prependFirstChunkEnvelope(char * buffer, size_t envelopePartLen, const Headers& headers,
+	Packet prependFirstChunkEnvelope(void * buffer, size_t envelopePartLen, const Headers& headers,
 			size_t payloadLen);
 	//! Composes next chunk envelope into output stream for chunked-encoded transmission
 	/*!
@@ -99,7 +99,7 @@ public:
 	 * \param payloadLen Length of the payload data in next HTTP-chunk (should be positive)
 	 * \return Length of the next HTTP-chunk envelope
 	 */
-	size_t composeNextChunkEnvelope(char * buffer, size_t bufLen, size_t payloadLen);
+	size_t composeNextChunkEnvelope(void * buffer, size_t bufLen, size_t payloadLen);
 	//! Returns size of next HTTP-chunk envelope (TODO)
 	/*!
 	 * TODO
@@ -112,7 +112,7 @@ public:
 	 * \param payloadLen Length of the data in buffer to send (should start from 'envelopePartLen' offset)
 	 * \return Pointer to the next HTTP-chunk and it's length (envelope + data)
 	 */
-	Packet prependNextChunkEnvelope(char * buffer, size_t envelopePartLen, size_t payloadLen);
+	Packet prependNextChunkEnvelope(void * buffer, size_t envelopePartLen, size_t payloadLen);
 	//! Composes last HTTP-chunk into output stream for chunked-encoded transmission
 	/*!
 	 * \param target Output stream to compose envelope into

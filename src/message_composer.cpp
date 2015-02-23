@@ -58,21 +58,21 @@ void MessageComposer::composeEnvelope(std::ostream& target, const Headers& heade
 	target << "\r\n";
 }
 
-size_t MessageComposer::composeEnvelope(char * buffer, size_t bufLen, const Headers& headers, size_t payloadLen)
+size_t MessageComposer::composeEnvelope(void * buffer, size_t bufLen, const Headers& headers, size_t payloadLen)
 {
 	std::ostringstream envelope;
 	composeEnvelope(envelope, headers, payloadLen);
 	if (envelope.str().size() > bufLen) {
 		std::ostringstream msg;
-		msg << "Not enough buffer for envelope: " << buffer <<
+		msg << "Not enough buffer for envelope: " << bufLen <<
 			" bytes available, " << envelope.str().size() << " bytes needed";
 		throw std::runtime_error(msg.str());
 	}
-	envelope.str().copy(buffer, envelope.str().size());
+	envelope.str().copy(static_cast<char *>(buffer), envelope.str().size());
 	return envelope.str().size();
 }
 
-MessageComposer::Packet MessageComposer::prependEnvelope(char * buffer, size_t envelopePartLen,
+MessageComposer::Packet MessageComposer::prependEnvelope(void * buffer, size_t envelopePartLen,
 		const Headers& headers, size_t payloadLen)
 {
 	std::ostringstream envelope;
@@ -83,7 +83,7 @@ MessageComposer::Packet MessageComposer::prependEnvelope(char * buffer, size_t e
 			" bytes available, " << envelope.str().size() << " bytes needed";
 		throw std::runtime_error(msg.str());
 	}
-	char * packetPtr = buffer + envelopePartLen - envelope.str().size(); 
+	char * packetPtr = static_cast<char *>(buffer) + envelopePartLen - envelope.str().size(); 
 	envelope.str().copy(packetPtr, envelope.str().size());
 	return Packet(packetPtr, envelope.str().size() + payloadLen);
 }
@@ -103,22 +103,22 @@ void MessageComposer::composeFirstChunkEnvelope(std::ostream& target,
 	target << "\r\n" << std::hex << payloadLen << "\r\n";
 }
 
-size_t MessageComposer::composeFirstChunkEnvelope(char * buffer, size_t bufLen, const Headers& headers,
+size_t MessageComposer::composeFirstChunkEnvelope(void * buffer, size_t bufLen, const Headers& headers,
 		size_t payloadLen)
 {
 	std::ostringstream envelope;
 	composeFirstChunkEnvelope(envelope, headers, payloadLen);
 	if (envelope.str().size() > bufLen) {
 		std::ostringstream msg;
-		msg << "Not enough buffer for envelope: " << buffer <<
+		msg << "Not enough buffer for envelope: " << bufLen <<
 			" bytes available, " << envelope.str().size() << " bytes needed";
 		throw std::runtime_error(msg.str());
 	}
-	envelope.str().copy(buffer, envelope.str().size());
+	envelope.str().copy(static_cast<char *>(buffer), envelope.str().size());
 	return envelope.str().size();
 }
 
-MessageComposer::Packet MessageComposer::prependFirstChunkEnvelope(char * buffer,
+MessageComposer::Packet MessageComposer::prependFirstChunkEnvelope(void * buffer,
 		size_t envelopePartLen, const Headers& headers, size_t payloadLen)
 {
 	std::ostringstream envelope;
@@ -129,7 +129,7 @@ MessageComposer::Packet MessageComposer::prependFirstChunkEnvelope(char * buffer
 			" bytes available, " << envelope.str().size() << " bytes needed";
 		throw std::runtime_error(msg.str());
 	}
-	char * packetPtr = buffer + envelopePartLen - envelope.str().size(); 
+	char * packetPtr = static_cast<char *>(buffer) + envelopePartLen - envelope.str().size(); 
 	envelope.str().copy(packetPtr, envelope.str().size());
 	return Packet(packetPtr, envelope.str().size() + payloadLen);
 }
@@ -142,21 +142,21 @@ void MessageComposer::composeNextChunkEnvelope(std::ostream& target, size_t payl
 	target << "\r\n" << std::hex << payloadLen << "\r\n";
 }
 
-size_t MessageComposer::composeNextChunkEnvelope(char * buffer, size_t bufLen, size_t payloadLen)
+size_t MessageComposer::composeNextChunkEnvelope(void * buffer, size_t bufLen, size_t payloadLen)
 {
 	std::ostringstream envelope;
 	composeNextChunkEnvelope(envelope, payloadLen);
 	if (envelope.str().size() > bufLen) {
 		std::ostringstream msg;
-		msg << "Not enough buffer for envelope: " << buffer <<
+		msg << "Not enough buffer for envelope: " << bufLen <<
 			" bytes available, " << envelope.str().size() << " bytes needed";
 		throw std::runtime_error(msg.str());
 	}
-	envelope.str().copy(buffer, envelope.str().size());
+	envelope.str().copy(static_cast<char *>(buffer), envelope.str().size());
 	return envelope.str().size();
 }
 
-MessageComposer::Packet MessageComposer::prependNextChunkEnvelope(char * buffer, size_t envelopePartLen, size_t payloadLen)
+MessageComposer::Packet MessageComposer::prependNextChunkEnvelope(void * buffer, size_t envelopePartLen, size_t payloadLen)
 {
 	std::ostringstream envelope;
 	composeNextChunkEnvelope(envelope, payloadLen);
@@ -166,7 +166,7 @@ MessageComposer::Packet MessageComposer::prependNextChunkEnvelope(char * buffer,
 			" bytes available, " << envelope.str().size() << " bytes needed";
 		throw std::runtime_error(msg.str());
 	}
-	char * packetPtr = buffer + envelopePartLen - envelope.str().size(); 
+	char * packetPtr = static_cast<char *>(buffer) + envelopePartLen - envelope.str().size(); 
 	envelope.str().copy(packetPtr, envelope.str().size());
 	return Packet(packetPtr, envelope.str().size() + payloadLen);
 }

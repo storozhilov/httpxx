@@ -87,7 +87,7 @@ TEST_F(MessageComposerTest, PrependEnvelope)
 		"Content-Type: text/plain\r\n"
 		"Host: www.example.com\r\n"
 		"\r\n",
-		std::string(p.first, p.second));
+		std::string(static_cast<const char *>(p.first), p.second));
 
 	std::ostringstream re;
 	re <<	"GET /index.html HTTP/1.1\r\n" <<
@@ -97,12 +97,12 @@ TEST_F(MessageComposerTest, PrependEnvelope)
 		"\r\n" <<
 		Payload;
 	p = composer->prependEnvelope(buffer, ENVELOPE_SIZE, *headers, PayloadLen);
-	EXPECT_EQ(re.str(), std::string(p.first, p.second));
+	EXPECT_EQ(re.str(), std::string(static_cast<const char *>(p.first), p.second));
 
 	headers->insert(Headers::value_type("content-length", "256"));
 	headers->insert(Headers::value_type("transfer-encoding", "chunked"));
 	p = composer->prependEnvelope(buffer, ENVELOPE_SIZE, *headers, PayloadLen);
-	EXPECT_EQ(re.str(), std::string(p.first, p.second));
+	EXPECT_EQ(re.str(), std::string(static_cast<const char *>(p.first), p.second));
 
 	EXPECT_THROW(composer->prependEnvelope(buffer, 1U, *headers), std::runtime_error);
 	EXPECT_THROW(composer->prependEnvelope(buffer, 1U, *headers, PayloadLen), std::runtime_error);
@@ -160,12 +160,12 @@ TEST_F(MessageComposerTest, PrependFirstChunkEnvelope)
 		std::hex << PayloadLen << "\r\n" <<
 		Payload;
 	MessageComposer::Packet p = composer->prependFirstChunkEnvelope(buffer, ENVELOPE_SIZE, *headers, PayloadLen);
-	EXPECT_EQ(re.str(), std::string(p.first, p.second));
+	EXPECT_EQ(re.str(), std::string(static_cast<const char *>(p.first), p.second));
 
 	headers->insert(Headers::value_type("content-length", "256"));
 	headers->insert(Headers::value_type("transfer-encoding", "chunked"));
 	p = composer->prependFirstChunkEnvelope(buffer, ENVELOPE_SIZE, *headers, PayloadLen);
-	EXPECT_EQ(re.str(), std::string(p.first, p.second));
+	EXPECT_EQ(re.str(), std::string(static_cast<const char *>(p.first), p.second));
 
 	EXPECT_THROW(composer->prependFirstChunkEnvelope(buffer, ENVELOPE_SIZE, *headers, 0U), std::runtime_error);
 	EXPECT_THROW(composer->prependFirstChunkEnvelope(buffer, 1U, *headers, PayloadLen), std::runtime_error);
@@ -200,12 +200,12 @@ TEST_F(MessageComposerTest, PrependNextChunkEnvelope)
 		std::hex << PayloadLen << "\r\n" <<
 		Payload;
 	MessageComposer::Packet p = composer->prependNextChunkEnvelope(buffer, ENVELOPE_SIZE, PayloadLen);
-	EXPECT_EQ(re.str(), std::string(p.first, p.second));
+	EXPECT_EQ(re.str(), std::string(static_cast<const char *>(p.first), p.second));
 
 	headers->insert(Headers::value_type("content-length", "256"));
 	headers->insert(Headers::value_type("transfer-encoding", "chunked"));
 	p = composer->prependNextChunkEnvelope(buffer, ENVELOPE_SIZE, PayloadLen);
-	EXPECT_EQ(re.str(), std::string(p.first, p.second));
+	EXPECT_EQ(re.str(), std::string(static_cast<const char *>(p.first), p.second));
 
 	EXPECT_THROW(composer->prependNextChunkEnvelope(buffer, 1U, PayloadLen), std::runtime_error);
 	EXPECT_THROW(composer->prependNextChunkEnvelope(buffer, BUFFER_SIZE, 0U), std::runtime_error);
