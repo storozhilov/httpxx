@@ -5,6 +5,7 @@
 #include <map>
 #include <functional>
 
+//! httpxx namespace
 namespace httpxx
 {
 
