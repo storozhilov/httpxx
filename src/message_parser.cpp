@@ -381,7 +381,7 @@ void MessageParser::appendHeader(char ch)
 	}
 	trim(_headerFieldName);
 	trim(_headerFieldValue);
-	_headers.insert(headers::value_type(_headerFieldName, _headerFieldValue));
+	_headers.insert(Headers::value_type(_headerFieldName, _headerFieldValue));
 	_headerFieldName.clear();
 	_headerFieldValue.clear();
 }

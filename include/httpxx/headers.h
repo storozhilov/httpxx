@@ -3,12 +3,13 @@
 
 #include <httpxx/common.h>
 #include <map>
+#include <ostream>
 
 namespace httpxx
 {
 
 //! Container for HTTP-headers
-class headers : public std::multimap<std::string, std::string, CaseInsensitiveComparator>
+class Headers : public std::multimap<std::string, std::string, CaseInsensitiveComparator>
 {
 public:
 	//! Inspects headers for header
@@ -45,7 +46,32 @@ public:
 		std::pair<const_iterator, const_iterator> range = equal_range(header);
 		return range.first == range.second ? std::string() : range.first->second;
 	}
-
+	//! Composes headers into output stream
+	/*!
+	 * \param target Output stream to compose headers into
+	 * \note Method does not do any preprocessing to header
+	 *       names and values - they should conform RFC.
+	 *       If you want header value to be multiline, insert 
+	 *       correct LWS(s) manually.
+	 */
+	inline void compose(std::ostream& target) const
+	{
+		for (const_iterator i = begin(); i != end(); ++i) {
+			target << i->first << ": " << i->second  << "\r\n";
+		}
+	}
+	//! Returns size of composed headers
+	/*!
+	 * \sa compose()
+	 */
+	inline size_t composedSize() const
+	{
+		size_t result = 0U;
+		for (const_iterator i = begin(); i != end(); ++i) {
+			result += (i->first.length() + i->second.length() + 4U);
+		}
+		return result;
+	}
 };
 
 } // namespace httpxx

@@ -188,7 +188,7 @@ public:
 		return _thirdToken;
 	}
 	//! Returns a constant reference to the HTTP-message headers
-	inline const httpxx::headers& headers() //const
+	inline const httpxx::Headers& headers() //const
 	{
 		return _headers;
 	}
@@ -315,7 +315,7 @@ private:
 	std::string _thirdToken;
 	std::string _headerFieldName;
 	std::string _headerFieldValue;
-	httpxx::headers _headers;
+	httpxx::Headers _headers;
 	size_t _contentLength;
 	size_t _identityBodyBytesParsed;
 	std::string _chunkSizeStr;
