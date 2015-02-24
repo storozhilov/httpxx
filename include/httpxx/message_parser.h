@@ -21,8 +21,42 @@ namespace httpxx
 
 //! HTTP-message parser
 /*!
-  Parser does not apply strict rules on the first three tokens: first and second ones could consist of
-  CHAR's which are not CTL/SP/HT's, third one is to be of CHAR's, which are not CTL's (see RFC-2616).
+ * Stateful, streaming-capable HTTP-message parser.
+ *
+ * You have no any guarantee that your peer will send to
+ * you just one complete HTTP-message and nothing else.
+ * Generally, incoming data buffer could contain:
+ *
+ * - a part of the HTTP-message;
+ * - complete HTTP-message;
+ * - complete HTTP-message followed by the partial one;
+ * - multiple HTTP-messages;
+ * - multiple HTTP-messages followed by the partial one.
+ *
+ * All use-cases above are covered by this class.
+ *
+ * You can parse incoming data buffer character by character, or
+ * message by message - just choose appropriate parse() method.
+ * Writing payload to output stream is also provided.
+ *
+ * Example of use:
+ * \code{.cpp}
+ * ...
+ *
+ * ssize_t bytesReceived = recv(sock, buf, BUF_LEN, 0);
+ * std::ostringstream payload;
+ * httpxx::MessageParser parser;
+ * std::pair<bool, size_t> res = parser.parse(buf, bytesReceived, payload);
+ * if (res.first) {
+ *     std::cout << "HTTP-message has been received" << std::endl;
+ * }
+ *
+ * ...
+ * \endcode
+ *
+ * \note Parser does not apply strict rules on first three tokens:
+ *       first and second ones could consist of CHAR's which are not CTL/SP/HT's,
+ *       third one is to be of CHAR's, which are not CTL's (see RFC-2616).
 */
 class MessageParser
 {
@@ -63,6 +97,10 @@ public:
 		ParsingTrailerHeaderValueLWS,			//!< Parsing message trailer header multiline value LWS
 		ParsingFinalLF,					//!< Parsing final LF of the message
 	};
+	//! Payload chunk { ptr => size }
+	typedef std::pair<const void *, size_t> PayloadChunk;
+	//! Payload chunks container
+	typedef std::vector<PayloadChunk> Payload;
 	//! HTTP-message parser exception class
 	class Exception : public std::exception
 	{
@@ -253,23 +291,21 @@ public:
 	{
 		return _state == ParsingIdentityBody || _state == ParsingChunk;
 	}
-	//! Parses buffer for an HTTP-message and puts it's body to the supplied buffer
+	//! Parses buffer for an HTTP-message and composes payload chunks container
 	/*!
-	  This method parses a buffer until complete or bad HTTP-message has been parsed or when the
-	  supplied body buffer has no space for the body of the HTTP-message.
-	  \param parseBuffer Pointer to the buffer to parse
-	  \param parseBufferSize Size of the buffer to parse
-	  \param bodyBuffer Pointer to buffer where to store HTTP-message body
-	  \param bodyBufferSize Size of the buffer where to store HTTP-message body
-	  \return Pair with parsed bytes amount and the amount of bytes, which has been stored in body buffer
+	 * TODO: Implementation
+	 * \param parseBuffer Pointer to the buffer to parse
+	 * \param parseBufferSize Size of the buffer to parse
+	 * \param payload Optional pointer to payload chunks container to fill in [out]
+	 * \return A pair with complete message flag and parsed bytes amount
 	*/
-	//std::pair<size_t, size_t> parse(const char * parseBuffer, size_t parseBufferSize, char * bodyBuffer, size_t bodyBufferSize);
+	std::pair<bool, size_t> parse(const void * parseBuffer, size_t parseBufferSize, Payload * payload = 0);
 	//! Parses buffer for an HTTP-message and stores it's body into the supplied stream
 	/*!
-	  \param parseBuffer Pointer to the buffer to parse
-	  \param parseBufferSize Size of the buffer to parse
-	  \param os Output stream where to store HTTP-message body
-	  \return A pair with complete message flag and parsed bytes amount
+	 * \param parseBuffer Pointer to the buffer to parse
+	 * \param parseBufferSize Size of the buffer to parse
+	 * \param os Output stream where to store HTTP-message body
+	 * \return A pair with complete message flag and parsed bytes amount
 	*/
 	std::pair<bool, size_t> parse(const void * parseBuffer, size_t parseBufferSize, std::ostream& os);
 	//! Resets parser
