@@ -37,7 +37,7 @@ namespace httpxx
  * All use-cases above are covered by this class.
  *
  * You can parse incoming data buffer character by character, or
- * message by message - just choose appropriate parse() method.
+ * chunk by chunk - just choose appropriate parse() method.
  * Writing payload to output stream is also provided.
  *
  * Example of use:
@@ -49,7 +49,11 @@ namespace httpxx
  * httpxx::MessageParser parser;
  * std::pair<bool, size_t> res = parser.parse(buf, bytesReceived, payload);
  * if (res.first) {
- *     std::cout << "HTTP-message has been received" << std::endl;
+ *     std::cout << "HTTP-message has been received:" << std::endl << std::endl;
+ *     for (httpxx::Headers::const_iterator i = parser.headers().begin(); i != parser.headers().end(); ++i) {
+ *         std::cout << i->first << ": " << i->second << std::endl;
+ *     }
+ *     std::cout << std::endl << payload.str() << std::endl;
  * }
  *
  * ...
@@ -57,7 +61,8 @@ namespace httpxx
  *
  * \note Parser does not apply strict rules on first three tokens:
  *       first and second ones could consist of CHAR's which are not CTL/SP/HT's,
- *       third one is to be of CHAR's, which are not CTL's (see RFC-2616).
+ *       third one is to be of CHAR's, which are not CTL's (see
+ *       <a href="https://www.ietf.org/rfc/rfc2616.txt">RFC-2616</a>).
 */
 class MessageParser
 {
@@ -287,7 +292,7 @@ public:
 	  \return TRUE if complete message has been successfully parsed
 	*/
 	bool parse(char ch, bool * isBodyChar = 0);
-	//! Inspects if next character expected to be of HTTP-message body
+	//! Inspects if next character is expected to be of HTTP-message body
 	inline bool bodyExpected() const
 	{
 		return _state == ParsingIdentityBody || _state == ParsingChunk;
@@ -295,20 +300,20 @@ public:
 	//! Parses buffer for an HTTP-message and composes payload chunks container
 	/*!
 	 * TODO: Implementation
-	 * \param parseBuffer Pointer to the buffer to parse
-	 * \param parseBufferSize Size of the buffer to parse
+	 * \param buf Pointer to the buffer to parse
+	 * \param bufLen Size of the buffer to parse
 	 * \param payload Optional pointer to payload chunks container to fill in [out]
 	 * \return A pair with complete message flag and parsed bytes amount
 	*/
-	std::pair<bool, size_t> parse(const void * parseBuffer, size_t parseBufferSize, Payload * payload = 0);
+	std::pair<bool, size_t> parse(const void * buf, size_t bufLen, Payload * payload = 0);
 	//! Parses buffer for an HTTP-message and stores it's body into the supplied stream
 	/*!
-	 * \param parseBuffer Pointer to the buffer to parse
-	 * \param parseBufferSize Size of the buffer to parse
+	 * \param buf Pointer to the buffer to parse
+	 * \param bufLen Size of the buffer to parse
 	 * \param os Output stream where to store HTTP-message body
 	 * \return A pair with complete message flag and parsed bytes amount
 	*/
-	std::pair<bool, size_t> parse(const void * parseBuffer, size_t parseBufferSize, std::ostream& os);
+	std::pair<bool, size_t> parse(const void * buf, size_t bufLen, std::ostream& os);
 	//! Resets parser
 	virtual void reset();
 private:

@@ -301,47 +301,12 @@ bool MessageParser::parse(char ch, bool * isBodyChar)
 	return _state == ParsingMessage;
 }
 
-/*std::pair<size_t, size_t> MessageParser::parse(const char * parseBuffer, size_t parseBufferSize, char * bodyBuffer, size_t bodyBufferSize)
+std::pair<bool, size_t> MessageParser::parse(const void * buf, size_t bufLen, std::ostream& os)
 {
-	size_t bytesParsed = 0;
-	size_t bodyBytes = 0;
-	while (bytesParsed < parseBufferSize) {
-		if (bodyExpected() && (bodyBytes >= bodyBufferSize)) {
-			// Body buffer has no space for body byte
-			break;
-		}
-		char ch = *(parseBuffer + bytesParsed++);
-		if (parse(ch)) {
-			*(bodyBuffer + bodyBytes++) = ch;
-		}
-		if (isCompleted() || isBad()) {
-			break;
-		}
-	}
-	return std::pair<size_t, size_t>(bytesParsed, bodyBytes);
-}
-
-size_t MessageParser::parse(const char * parseBuffer, size_t parseBufferSize, std::ostream& os)
-{
-	size_t bytesParsed = 0;
-	while (bytesParsed < parseBufferSize) {
-		char ch = *(parseBuffer + bytesParsed++);
-		if (parse(ch)) {
-			os.put(ch);
-		}
-		if (isCompleted() || isBad()) {
-			break;
-		}
-	}
-	return bytesParsed;
-}*/
-
-std::pair<bool, size_t> MessageParser::parse(const void * parseBuffer, size_t parseBufferSize, std::ostream& os)
-{
-	const char * pb = static_cast<const char *>(parseBuffer);
+	const char * pb = static_cast<const char *>(buf);
 	size_t bytesParsed = 0;
 	bool completeMessageDetected = false;
-	while (bytesParsed < parseBufferSize && !completeMessageDetected) {
+	while (bytesParsed < bufLen && !completeMessageDetected) {
 		char ch = *(pb + bytesParsed++);
 		bool isBodyChar;
 		completeMessageDetected = parse(ch, &isBodyChar);

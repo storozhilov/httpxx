@@ -9,7 +9,54 @@ namespace httpxx
 
 //! HTTP-message composer
 /*!
- * TODO
+ * Generally speaking, HTTP adds an envelope before payload. This is true either
+ * for identity-encoded transmission (<i>"Content-Length: <N>" header is used</i>) or
+ * in case of chunked encoding one (<i>"Transfer-Encoding: chunked" header presents</i>).
+ * So the main idea is to generate an envelope for given headers and payload,
+ * then to send an envelope and payload to peer one by one. If you want to prepend
+ * payload with envelope to send it to peer as single piece of bytes use respective
+ * family of composition methods: prependEnvelope(), prependFirstChunkEnvelope(),
+ * prependNextChunkEnvelope().
+ * 
+ * Indentity-encoded transmission envelope could be composed using composeEnvelope()
+ * methods family. Chunked-encoded transmission should be implemented similar to
+ * following scenario (<i>Read lines from standard input and send them to peer as
+ * HTTP-chunks</i>):
+ *
+ * \code{.cpp}
+ * ...
+ *
+ * httpxx::MessageComposer composer("HTTP/1.1", "200", "OK");
+ * httpxx::Headers headers;
+ * headers.insert(httpxx::Headers::value_type("Content-Type", "text/plain"));
+ * bool isFirstChunk = true;
+ * while (std::cin) {
+ *     std::string s;
+ *     std::cin >> s;
+ *     std::ostringstream envelope;
+ *     if (isFirstChunk) {
+ *         composer.composeFirstChunkEnvelope(envelope, headers, s.length());
+ *         isFirstChunk = false;
+ *     } else {
+ *         composer.composeNextChunkEnvelope(envelope, s.length());
+ *     }
+ *     send(sock, envelope.str().data(), envelope.str().length(), 0);
+ *     send(sock, s.data(), s.length(), 0);
+ * }
+ * headers.clear();
+ * // You can send additional headers in last chunk
+ * headers.insert(httpxx::Headers::value_type("X-Good", "Bye! :)"));
+ * std::ostringstream lastChunk;
+ * composer.composeLastChunk(lastChunk, headers);
+ * send(sock, lastChunk.str().data(), lastChunk.str().length(), 0);
+ *
+ * ...
+ * \endcode
+ * 
+ * \note <i>"Content-Length"</i> and <i>"Transfer-Encoding"</i> headers are
+ *       automatically generated on envelope composition. Such headers, which
+ *       are already exists are removed first and regenerated afterwards according
+ *       to requested transmission encoding type.
  */
 class MessageComposer
 {
