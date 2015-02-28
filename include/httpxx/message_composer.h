@@ -28,7 +28,7 @@ namespace httpxx
  *
  * httpxx::MessageComposer composer("HTTP/1.1", "200", "OK");
  * httpxx::Headers headers;
- * headers.insert(httpxx::Headers::value_type("Content-Type", "text/plain"));
+ * headers.add("Content-Type", "text/plain");
  * bool isFirstChunk = true;
  * while (std::cin) {
  *     std::string s;
@@ -45,7 +45,7 @@ namespace httpxx
  * }
  * headers.clear();
  * // You can send additional headers in last chunk
- * headers.insert(httpxx::Headers::value_type("X-Good", "Bye! :)"));
+ * headers.add("X-Good", "Bye! :)");
  * std::ostringstream lastChunk;
  * composer.composeLastChunk(lastChunk, headers);
  * send(sock, lastChunk.str().data(), lastChunk.str().length(), 0);
@@ -151,7 +151,7 @@ public:
 	/*!
 	 * TODO
 	 */
-	size_t nextChunkEnvelopeSize(size_t payloadLen = 0U);
+	size_t nextChunkEnvelopeSize(size_t payloadLen);
 	//! Prepends data with envelope to compose next HTTP-chunk to continue chunked-encoded transmission
 	/*!
 	 * \param buffer Pointer to result buffer to compose envelope into

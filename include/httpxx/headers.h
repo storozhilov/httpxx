@@ -60,6 +60,15 @@ public:
 			target << i->first << ": " << i->second  << "\r\n";
 		}
 	}
+	//! Adds header
+	/*!
+	 * \param name Header name
+	 * \param value Header value
+	 */
+	inline void add(const std::string& name, const std::string& value)
+	{
+		insert(value_type(name, value));
+	}
 	//! Returns size of composed headers
 	/*!
 	 * \sa compose()

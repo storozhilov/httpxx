@@ -51,7 +51,7 @@ void MessageComposer::composeEnvelope(std::ostream& target, const Headers& heade
 	if (payloadLen > 0U) {
 		std::ostringstream oss;
 		oss << payloadLen;
-		actualHeaders.insert(Headers::value_type(ContentLengthHeader, oss.str()));
+		actualHeaders.add(ContentLengthHeader, oss.str());
 	}
 	composeFirstLine(target, _firstToken, _secondToken, _thirdToken);
 	composeHeader(target, actualHeaders);
@@ -97,7 +97,7 @@ void MessageComposer::composeFirstChunkEnvelope(std::ostream& target,
 	Headers actualHeaders(headers);
 	actualHeaders.erase(ContentLengthHeader);
 	actualHeaders.erase(TransferEncodingHeader);
-	actualHeaders.insert(Headers::value_type(TransferEncodingHeader, "chunked"));
+	actualHeaders.add(TransferEncodingHeader, "chunked");
 	composeFirstLine(target, _firstToken, _secondToken, _thirdToken);
 	composeHeader(target, actualHeaders);
 	target << "\r\n" << std::hex << payloadLen << "\r\n";
