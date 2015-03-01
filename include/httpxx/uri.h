@@ -47,19 +47,7 @@ public:
 	{
 		return _path;
 	}
-	//! Returns percent-encoded query part of the URI
-	/*!
-	 * \note This value should be parsed for params extraction!
-	 */
-	inline const std::string& encodedQuery() const
-	{
-		return _encodedQuery;
-	}
-	//! Returns percent-decoded query part of the URI
-	/*!
-	 * \note Do not parse this value for params extraction - use encodedQuery() instead!
-	 *       This method is to be used for custom query part processing only.
-	 */
+	//! Returns query part of the URI
 	inline const std::string& query() const
 	{
 		return _query;
@@ -82,13 +70,11 @@ public:
 	//! Returns size of composed URI
 	inline size_t composedSize() const
 	{
-		return _encodedPath.size() +
-			(_encodedQuery.empty() ? 0U : 1U + _encodedQuery.size());
+		return _encodedPath.size() + (_query.empty() ? 0U : 1U + _query.size());
 	}
 private:
 	std::string _encodedPath;
 	std::string _path;
-	std::string _encodedQuery;
 	std::string _query;
 };
 
