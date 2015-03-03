@@ -18,11 +18,20 @@ public:
 	{}
 	//! Constructs params by parsing a supplied string
 	/*!
+	 * \note To extract POST params pass HTTP-message body to this constructor
 	 * \param str String to parse
 	 */
 	Params(const std::string& str);
+	//! Constructs params by parsing a supplied buffer
+	/*!
+	 * \note To extract POST params pass HTTP-message body to this constructor
+	 * \param buf Pointer to buffer to parse
+	 * \param len Buffer size
+	 */
+	Params(const void * buf, size_t len);
 	//! Constructs params from URI
 	/*!
+	 * \note Use this constructor for GET params extraction
 	 * \param uri URI to construct params from
 	 */
 	Params(const Uri& uri);

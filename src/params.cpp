@@ -12,6 +12,12 @@ Params::Params(const std::string& str) :
 	parse(str);
 }
 
+Params::Params(const void * buf, size_t len) :
+	std::multimap<std::string, std::string>()
+{
+	parse(std::string(static_cast<const char *>(buf), len));
+}
+
 Params::Params(const Uri& uri) :
 	std::multimap<std::string, std::string>()
 {
