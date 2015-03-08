@@ -1,0 +1,13 @@
+*.dblite
+*.swp
+*.o
+*.os
+*.config
+*.creator
+*.creator.user
+*.files
+*.includes
+test/test_units
+test/gtest-1.7.0/*
+doc/*
+lib/*
