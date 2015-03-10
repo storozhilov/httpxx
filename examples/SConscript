@@ -1,0 +1,13 @@
+import os
+
+env = Environment(
+CCFLAGS = ['-g', '-Wall'],
+CPPPATH = ['../include'],
+LIBPATH = '../lib',
+LIBS = ['httpxx']
+)
+env.Append(ENV = {'PATH' : os.environ['PATH']})
+
+httpdFileBrowserBuilder = env.Program('httpd_file_browser', ['httpd_file_browser.cpp'])
+
+Default(httpdFileBrowserBuilder)

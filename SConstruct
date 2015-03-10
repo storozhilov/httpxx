@@ -9,8 +9,8 @@ AddOption('--prefix',
 
 sconscriptTargets = ['src/SConscript']
 
-SConscript(['src/SConscript', 'test/SConscript'])
-#SConscript('src/SConscript')
+# TODO: Make build examples optional?
+SConscript(['src/SConscript', 'test/SConscript', 'examples/SConscript'])
 
 # Uninstall section
 env = Environment()

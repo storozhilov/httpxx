@@ -4,8 +4,6 @@ env = Environment(
 CCFLAGS = ['-g', '-Wall'],
 CPPPATH = ['../include', '../src', 'gtest-1.7.0', 'gtest-1.7.0/include'],
 LIBPATH = '../lib',
-#LIBS = ['ptk', 'isl', 'pthread', 'rt']
-#LIBS = ['ptk', 'isl', 'rt', 'pthread']
 LIBS = ['httpxx', 'pthread']
 )
 env.Append(ENV = {'PATH' : os.environ['PATH']})

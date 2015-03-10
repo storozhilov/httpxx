@@ -2,7 +2,7 @@ language: cpp
 
 before_install:
         - sudo apt-get update -qq
-        - sudo apt-get install -qq unzip
+        - sudo apt-get install -qq unzip libboost-dev libasio-dev
         - wget https://googletest.googlecode.com/files/gtest-1.7.0.zip --directory-prefix=test
         - unzip test/gtest-1.7.0.zip -d test
 
