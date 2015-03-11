@@ -28,7 +28,7 @@ namespace httpxx
  * you just one complete HTTP-message and nothing else.
  * Generally, incoming data buffer could contain:
  *
- * - a part of the HTTP-message;
+ * - part of the HTTP-message;
  * - complete HTTP-message;
  * - complete HTTP-message followed by the partial one;
  * - multiple HTTP-messages;
@@ -49,7 +49,9 @@ namespace httpxx
  * httpxx::MessageParser parser;
  * std::pair<bool, size_t> res = parser.parse(buf, bytesReceived, payload);
  * if (res.first) {
- *     std::cout << "HTTP-message has been received:" << std::endl << std::endl;
+ *     std::cout << "HTTP-message has been received:" << std::endl <<
+ *               << parser.firstToken() << ' ' << parser.secondToken() <<
+ *               << ' ' << parser.thirdToken() << std::endl;
  *     for (httpxx::Headers::const_iterator i = parser.headers().begin(); i != parser.headers().end(); ++i) {
  *         std::cout << i->first << ": " << i->second << std::endl;
  *     }

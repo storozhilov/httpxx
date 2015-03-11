@@ -53,9 +53,9 @@ public:
 	 * \param value Value to inspect against
 	 * \return TRUE if name contains 'name' => 'value' pair
 	 */
-	bool have(const std::string& paramName, const std::string& value) const
+	bool have(const std::string& name, const std::string& value) const
 	{
-		std::pair<const_iterator, const_iterator> range = equal_range(paramName);
+		std::pair<const_iterator, const_iterator> range = equal_range(name);
 		for (const_iterator i = range.first; i != range.second; ++i) {
 			if (i->second == value) {
 				return true;

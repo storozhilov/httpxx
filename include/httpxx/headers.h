@@ -25,13 +25,13 @@ public:
 
 	//! Inspects headers for 'header' => 'value' pair
 	/*!
-	 * \param header Header to inspect for value
+	 * \param name Header to inspect for value
 	 * \param value Value to inspect against
 	 * \return TRUE if header contains 'header' => 'value' pair
 	 */
-	bool have(const std::string& paramName, const std::string& value) const
+	bool have(const std::string& name, const std::string& value) const
 	{
-		std::pair<const_iterator, const_iterator> range = equal_range(paramName);
+		std::pair<const_iterator, const_iterator> range = equal_range(name);
 		for (const_iterator i = range.first; i != range.second; ++i) {
 			if (i->second == value) {
 				return true;

@@ -44,7 +44,7 @@ namespace httpxx
  *     send(sock, s.data(), s.length(), 0);
  * }
  * headers.clear();
- * // You can send additional headers in last chunk
+ * // You can send additional headers to the last chunk
  * headers.add("X-Good", "Bye! :)");
  * std::ostringstream lastChunk;
  * composer.composeLastChunk(lastChunk, headers);
@@ -55,8 +55,8 @@ namespace httpxx
  * 
  * \note <i>"Content-Length"</i> and <i>"Transfer-Encoding"</i> headers are
  *       automatically generated on envelope composition. Such headers, which
- *       are already exists are removed first and regenerated afterwards according
- *       to requested transmission encoding type.
+ *       are already exist are removed first and regenerated afterwards according
+ *       to requested transfer encoding type.
  */
 class MessageComposer
 {
@@ -64,6 +64,12 @@ public:
 	//! HTTP-packet: { buffer ptr => size }
 	typedef std::pair<const void *, size_t> Packet;
 
+	//! Constructs HTTP-message composer
+	/*!
+	 * \param firstToken First token of the first line
+	 * \param secondToken Second token of the first line
+	 * \param thirdToken Third token of the first line
+	 */
 	MessageComposer(const std::string& firstToken, const std::string& secondToken,
 			const std::string& thirdToken);
 	virtual ~MessageComposer();
