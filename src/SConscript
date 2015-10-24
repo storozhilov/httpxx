@@ -24,6 +24,6 @@ if prefix is None:
 	prefix = '/usr/local'
 
 libraryInstaller = env.Install(os.path.join(prefix, 'lib'), [staticLibraryBuilder, sharedLibraryBuilder])
-headersInstaller = env.Install(os.path.join(prefix, 'include/'), Glob('../include/*.h'))
+headersInstaller = env.Install(os.path.join(prefix, 'include/'), [Glob('../include/*.h'), Glob('../include/httpxx/*.h')])
 env.Alias('install', [libraryInstaller, headersInstaller])
 
